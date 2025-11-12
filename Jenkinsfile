@@ -8,14 +8,14 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // safer way with explicit branch
+                echo '📥 Cloning repository...'
                 git branch: 'main', url: 'https://github.com/saurashp/weather-app.git'
             }
         }
 
         stage('Clean Workspace') {
             steps {
-                // optional but helpful to avoid old cache issues
+                echo '🧹 Cleaning old workspace...'
                 sh 'rm -rf node_modules dist'
             }
         }
@@ -41,19 +41,32 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Docker Build & Run') {
             steps {
-                echo '✅ Build successful! (Deploy manually or via Docker in next step)'
+                echo '🐳 Building Docker image and running container...'
+                sh '''
+                    docker build -t weather-app .
+                    docker stop weather-container || true
+                    docker rm weather-container || true
+                    docker run -d -p 4173:4173 --name weather-container weather-app
+                '''
+            }
+        }
+
+        stage('Deploy Confirmation') {
+            steps {
+                echo '✅ Docker container deployed successfully!'
+                echo '🌐 Access the app at: http://localhost:4173'
             }
         }
     }
 
     post {
         success {
-            echo '🎉 Pipeline completed successfully!'
+            echo '🎉 Jenkins pipeline completed successfully with Docker deployment!'
         }
         failure {
-            echo '❌ Pipeline failed! Check the console output for details.'
+            echo '❌ Pipeline failed! Check console output for details.'
         }
         always {
             echo '🎯 Jenkins pipeline finished running.'
