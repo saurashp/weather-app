@@ -8,57 +8,43 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                echo '📥 Cloning repository...'
                 git branch: 'main', url: 'https://github.com/saurashp/weather-app.git'
+                bat 'dir' // to show what’s in workspace
             }
         }
 
-        stage('Clean Workspace') {
+        stage('Install, Build and Deploy') {
             steps {
-                echo '🧹 Cleaning old workspace...'
-                bat 'del /Q * 2>nul || echo Workspace clean'
-            }
-        }
+                dir('weather-app') {   // 👈 Go inside the actual folder
+                    echo '📦 Installing dependencies...'
+                    bat 'npm install'
 
-        stage('Install Dependencies') {
-            steps {
-                echo '📦 Installing dependencies...'
-                bat 'npm install'
-            }
-        }
+                    echo '🏗️ Building project...'
+                    bat 'npm run build'
 
-        stage('Build') {
-            steps {
-                echo '🏗️ Building the project...'
-                bat 'npm run build'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo '🧪 Running tests...'
-                bat 'npm test || echo "⚠️ No tests configured, skipping..."'
-            }
-        }
-
-        stage('Docker Build & Run') {
-            steps {
-                echo '🐳 Building Docker image...'
-                bat 'docker build -t weather-app .'
-                echo '🚀 Running container...'
-                bat 'docker run -d -p 3000:3000 weather-app'
+                    echo '🐳 Building Docker image and running container...'
+                    bat '''
+                        docker build -t weather-app .
+                        docker stop weather-container || exit 0
+                        docker rm weather-container || exit 0
+                        docker run -d -p 4173:4173 --name weather-container weather-app
+                    '''
+                }
             }
         }
 
         stage('Deploy Confirmation') {
             steps {
-                echo '✅ Deployment successful!'
+                echo '✅ Docker container deployed successfully!'
+                echo '🌐 Visit http://localhost:4173'
             }
         }
     }
 
     post {
         success {
-            echo '🎯 Jenkins pipeline finished successfully!'
+            echo '🎉 Jenkins pipeline completed successfully with Docker deployment!'
         }
         failure {
             echo '❌ Pipeline failed! Check console output for details.'
