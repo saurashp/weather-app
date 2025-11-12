@@ -8,25 +8,36 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/saurashp/weather-app.git'
+                // safer way with explicit branch
+                git branch: 'main', url: 'https://github.com/saurashp/weather-app.git'
+            }
+        }
+
+        stage('Clean Workspace') {
+            steps {
+                // optional but helpful to avoid old cache issues
+                sh 'rm -rf node_modules dist'
             }
         }
 
         stage('Install Dependencies') {
             steps {
+                echo '📦 Installing dependencies...'
                 sh 'npm install'
             }
         }
 
         stage('Build') {
             steps {
+                echo '🏗️ Building the project...'
                 sh 'npm run build'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'npm test || echo "No tests defined"'
+                echo '🧪 Running tests...'
+                sh 'npm test || echo "⚠️ No tests defined"'
             }
         }
 
@@ -38,8 +49,14 @@ pipeline {
     }
 
     post {
+        success {
+            echo '🎉 Pipeline completed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed! Check the console output for details.'
+        }
         always {
-            echo '🎯 Jenkins pipeline completed!'
+            echo '🎯 Jenkins pipeline finished running.'
         }
     }
 }
