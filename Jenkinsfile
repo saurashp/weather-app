@@ -15,7 +15,6 @@ pipeline {
         stage('Clean Workspace') {
             steps {
                 echo '🧹 Cleaning old workspace...'
-                // Windows equivalent of rm -rf *
                 bat 'del /Q * 2>nul || echo Workspace clean'
             }
         }
@@ -23,21 +22,22 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo '📦 Installing dependencies...'
-                bat 'npm install'
+                // Navigate to your project folder before installing
+                bat 'cd weather-app && npm install'
             }
         }
 
         stage('Build') {
             steps {
-                echo '🏗️ Building project...'
-                bat 'npm run build'
+                echo '🏗️ Building the project...'
+                bat 'cd weather-app && npm run build'
             }
         }
 
         stage('Test') {
             steps {
                 echo '🧪 Running tests...'
-                bat 'npm test'
+                bat 'cd weather-app && npm test'
             }
         }
 
@@ -49,17 +49,11 @@ pipeline {
                 bat 'docker run -d -p 3000:3000 weather-app'
             }
         }
-
-        stage('Deploy Confirmation') {
-            steps {
-                echo '✅ Deployment successful!'
-            }
-        }
     }
 
     post {
         success {
-            echo '🎯 Jenkins pipeline finished successfully.'
+            echo '🎯 Jenkins pipeline finished successfully!'
         }
         failure {
             echo '❌ Pipeline failed! Check console output for details.'
