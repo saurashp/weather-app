@@ -64,7 +64,7 @@ const weather = () => {
   };
 
   useEffect(() => {
-    search("alaska");
+    search("");
   }, []);
 
   return (
