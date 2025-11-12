@@ -22,22 +22,21 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo '📦 Installing dependencies...'
-                // Navigate to your project folder before installing
-                bat 'cd weather-app && npm install'
+                bat 'npm install'
             }
         }
 
         stage('Build') {
             steps {
                 echo '🏗️ Building the project...'
-                bat 'cd weather-app && npm run build'
+                bat 'npm run build'
             }
         }
 
         stage('Test') {
             steps {
                 echo '🧪 Running tests...'
-                bat 'cd weather-app && npm test'
+                bat 'npm test'
             }
         }
 
@@ -47,6 +46,12 @@ pipeline {
                 bat 'docker build -t weather-app .'
                 echo '🚀 Running container...'
                 bat 'docker run -d -p 3000:3000 weather-app'
+            }
+        }
+
+        stage('Deploy Confirmation') {
+            steps {
+                echo '✅ Deployment successful!'
             }
         }
     }
