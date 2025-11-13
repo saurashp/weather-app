@@ -8,46 +8,36 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo '📥 Cloning repository...'
                 git branch: 'main', url: 'https://github.com/saurashp/weather-app.git'
-                bat 'dir' // to show what’s in workspace
+                bat 'dir'
             }
         }
 
-        stage('Install, Build and Deploy') {
+        stage('Install & Build') {
             steps {
-                dir('weather-app') {   // 👈 Go inside the actual folder
-                    echo '📦 Installing dependencies...'
-                    bat 'npm install'
-
-                    echo '🏗️ Building project...'
-                    bat 'npm run build'
-
-                    echo '🐳 Building Docker image and running container...'
-                    bat '''
-                        docker build -t weather-app .
-                        docker stop weather-container || exit 0
-                        docker rm weather-container || exit 0
-                        docker run -d -p 4173:4173 --name weather-container weather-app
-                    '''
-                }
+                bat 'npm install'
+                bat 'npm run build'
             }
         }
 
-        stage('Deploy Confirmation') {
+        stage('Docker Build & Run') {
             steps {
-                echo '✅ Docker container deployed successfully!'
-                echo '🌐 Visit http://localhost:4173'
+                bat '''
+                    docker build -t weather-app .
+                    docker stop weather-container || exit 0
+                    docker rm weather-container || exit 0
+                    docker run -d -p 4173:4173 --name weather-container weather-app
+                '''
             }
         }
     }
 
     post {
         success {
-            echo '🎉 Jenkins pipeline completed successfully with Docker deployment!'
+            echo "SUCCESS: Visit app at http://localhost:4173"
         }
         failure {
-            echo '❌ Pipeline failed! Check console output for details.'
+            echo "Pipeline failed!"
         }
     }
 }
