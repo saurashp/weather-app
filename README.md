@@ -1,24 +1,41 @@
-# 🌦️ Weather App
+# 🌦️ Weather App with DevOps
 
-A modern and responsive weather application built with **React.js** and **Vite** that provides real-time weather information using the **OpenWeather API**.
+A modern weather application built using **React.js** and **Vite** that provides real-time weather information using the **OpenWeather API**. The project also demonstrates **DevOps practices** by integrating **Docker** for containerization and **Jenkins** for Continuous Integration (CI).
+
+---
 
 ## 🚀 Features
 
 - 🌍 Search weather by city name
-- 🌡️ Displays current temperature
+- 🌡️ Real-time temperature
 - 💧 Humidity information
 - 🌬️ Wind speed
-- ☁️ Weather condition with icons
+- ☁️ Weather conditions with icons
 - 📱 Responsive UI
 - ⚡ Fast performance with Vite
+- 🐳 Docker support for containerized deployment
+- 🔄 Jenkins CI pipeline for automated build process
+
+---
 
 ## 🛠️ Tech Stack
 
+### Frontend
 - React.js
 - Vite
 - JavaScript
 - CSS
+
+### API
 - OpenWeather API
+
+### DevOps
+- Docker
+- Jenkins
+- Git
+- GitHub
+
+---
 
 ## 📂 Project Structure
 
@@ -26,80 +43,107 @@ A modern and responsive weather application built with **React.js** and **Vite**
 weather-app/
 ├── public/
 ├── src/
-│   ├── components/
-│   ├── assets/
-│   ├── App.jsx
-│   └── main.jsx
+├── Dockerfile
+├── Jenkinsfile
 ├── .env
 ├── package.json
 ├── vite.config.js
 └── README.md
 ```
 
+---
+
 ## ⚙️ Installation
 
-Clone the repository
+### Clone Repository
 
 ```bash
-git clone https://github.com/your-username/weather-app.git
-```
-
-Navigate to the project directory
-
-```bash
+git clone https://github.com/saurashp/weather-app.git
 cd weather-app
 ```
 
-Install dependencies
+### Install Dependencies
 
 ```bash
 npm install
 ```
 
-Create a `.env` file in the root directory and add your OpenWeather API key.
+### Configure Environment Variables
+
+Create a `.env` file.
 
 ```env
 VITE_WEATHER_API_KEY=your_api_key_here
 ```
 
-Start the development server
+### Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Build for production
+---
+
+# 🐳 Docker
+
+Build Docker Image
 
 ```bash
-npm run build
+docker build -t weather-app .
 ```
+
+Run Docker Container
+
+```bash
+docker run -p 5173:5173 weather-app
+```
+
+---
+
+# 🔄 Jenkins CI Pipeline
+
+The project includes a **Jenkinsfile** to automate the build process.
+
+Pipeline stages include:
+
+- Clone Repository
+- Install Dependencies
+- Build Application
+- Verify Build Status
+
+This enables Continuous Integration (CI) by automatically building the application whenever new code is pushed to the repository.
+
+---
 
 ## 🔑 API Used
 
-This project uses the **OpenWeather API** to fetch real-time weather data.
+OpenWeather API
 
 https://openweathermap.org/api
 
+---
+
 ## 📸 Screenshots
 
-_Add screenshots of the application here._
+_Add application screenshots here._
 
-## 🌟 Future Improvements
+---
 
-- 5-Day Weather Forecast
+## 🚀 Future Improvements
+
+- 5-Day Forecast
 - Current Location Weather
-- Dark/Light Theme
+- Dark Mode
 - Air Quality Index
 - Weather Alerts
-- Hourly Forecast
 
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to fork this repository and submit a pull request.
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+MIT License
+
+---
 
 ## 👨‍💻 Author
 
